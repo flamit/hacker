@@ -1,0 +1,44 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+void solve() {
+    int N;
+    cin >> N;
+    vector<int> arr(N);
+    for(int i = 0; i < N; i++) {
+        cin >> arr[i];
+    }
+    int maxContiguousSum = 0, maxNonContiguousSum = 0, currentSum = 0;
+    for(int i = 0; i < N; i++) {
+        if(arr[i] > 0)
+            maxNonContiguousSum += arr[i];
+        currentSum += arr[i];
+        if(currentSum < 0) {
+            currentSum = 0;
+        } else if(currentSum > maxContiguousSum) {
+            maxContiguousSum = currentSum;
+        }
+    }
+    if(maxContiguousSum == 0) {
+        int maxElem = arr[0];
+        for(int i = 1; i < N; i++) {
+            maxElem = max(maxElem,arr[i]);
+        }
+        maxContiguousSum = maxNonContiguousSum = maxElem;
+    }
+    cout << maxContiguousSum << ' ' << maxNonContiguousSum << endl;
+}
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    int T;
+    cin >> T;
+    for(int i = 0; i < T; i++) {
+        solve();
+    }
+    return 0;
+}

@@ -1,0 +1,40 @@
+/*
+struct node
+{
+    int data;
+    node* left;
+    node* right;
+};
+
+*/
+void top_left_view(node * root);
+void top_right_view(node * root);
+void top_view(node * root)
+{
+   if(root->left)
+       top_left_view(root->left);
+   printf("%lu ", root->data);
+   if(root->right)
+       top_right_view(root->right);
+    printf("\n");
+}
+
+void top_left_view(node * root)
+{
+    if(root->left == NULL)
+       printf("%lu ", root->data);
+    else {
+       top_left_view(root->left);
+       printf("%lu ", root->data);
+    }
+}
+
+void top_right_view(node * root)
+{
+    if(root->right == NULL)
+       printf("%lu ", root->data);
+    else {
+       printf("%lu ", root->data);
+       top_right_view(root->right);
+    }
+}

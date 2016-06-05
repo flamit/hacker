@@ -1,0 +1,90 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <list>
+using namespace std;
+
+struct Edge {
+    int src;
+    int dst;
+    long long cost;
+};
+
+typedef vector<Edge> VE;
+
+class UnionFind {
+public:
+    explicit UnionFind(size_t n): data_(n), index_(n) {
+        for (int i = 0; i < n; ++i) {
+            index_[i] = i;
+            data_[i].push_back(i);
+        }
+    }
+
+    int find(int val) const {
+        return index_[val];
+    }
+    
+    void merge(int idx1, int idx2) {
+        if (data_[idx1].size() > data_[idx2].size()) {
+            swap(idx1, idx2);
+        }
+        
+        List & l1 = data_[idx1];
+        List & l2 = data_[idx2];
+        l1.insert(l1.end(), l2.begin(), l2.end());
+        for (const auto & val : l2) {
+            index_[val] = idx1;
+        }
+        l2.clear();
+    }
+    
+private:
+    typedef list<int> List;
+    vector<List> data_;
+    vector<int> index_;
+};
+
+long long solve(const VE & ve, size_t n) {
+    VE edges = ve;
+    std::sort(edges.begin(), edges.end(), [](const Edge & a, const Edge & b) {
+        return a.cost < b.cost;
+    });
+    
+    UnionFind uf(n);
+    
+    long long result = 0;
+    for (const auto & e : edges) {
+        int idx1 = uf.find(e.src);
+        int idx2 = uf.find(e.dst);
+        
+        if (idx1 != idx2) {
+            result += e.cost;
+            uf.merge(idx1, idx2);
+        }
+    }
+    
+    return result;
+}
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    VE ve;
+    ve.reserve(m);
+
+    for (int mi = 0; mi < m; ++mi) {
+        int x, y, c;
+        cin >> x >> y >> c;
+        ve.push_back(Edge{x-1, y-1, c});
+    }
+
+    int s;
+    cin >> s;
+
+    cout << solve(ve, n) << endl;
+    return 0;
+}
